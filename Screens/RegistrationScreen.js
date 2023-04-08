@@ -26,6 +26,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RegistrationScreen() {
   console.log(Platform.OS);
+  console.log('Hi from Debugger!');
 
   const [isReady, setIsReady] = useState(false);
   const [state, setState] = useState(initialState);
