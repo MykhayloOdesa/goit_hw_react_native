@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   TouchableWithoutFeedback,
@@ -13,20 +13,14 @@ import {
   Platform,
 } from 'react-native';
 
-import * as Font from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
-
 const initialState = {
   email: '',
   password: '',
 };
 
-SplashScreen.preventAutoHideAsync();
+export default function LoginScreen({ navigation }) {
+  console.log('login', Platform.OS);
 
-export default function RegistrationScreen() {
-  console.log(Platform.OS);
-
-  const [isReady, setIsReady] = useState(false);
   const [state, setState] = useState(initialState);
   const [, setIsKeyboardShown] = useState(false);
   const [isPasswordSecured, setIsPasswordSecured] = useState(true);
@@ -34,8 +28,6 @@ export default function RegistrationScreen() {
   const [dimensions, setDimensions] = useState(
     Dimensions.get('window').width - 16 * 2
   );
-
-  const [, setDimensionsHeight] = useState(Dimensions.get('window').height);
 
   const keyboardHide = () => {
     setIsKeyboardShown(false);
@@ -47,6 +39,7 @@ export default function RegistrationScreen() {
     console.log(state);
     setState(initialState);
     keyboardHide();
+    navigation.navigate('Home');
   };
 
   const passwordShown = () =>
@@ -54,17 +47,15 @@ export default function RegistrationScreen() {
       ? setIsPasswordSecured(false)
       : setIsPasswordSecured(true);
 
-  const showPasswordBtn = isPasswordSecured
+  const showPasswordButton = isPasswordSecured
     ? 'Reveal password'
     : 'Hide password';
 
   useEffect(() => {
     const onChange = () => {
       const width = Dimensions.get('window').width - 16 * 2;
-      const height = Dimensions.get('window').height;
 
       setDimensions(width);
-      setDimensionsHeight(height);
     };
 
     Dimensions.addEventListener('change', onChange);
@@ -75,58 +66,31 @@ export default function RegistrationScreen() {
   }, []);
 
   useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
+    const keyboardDidShownListener = Keyboard.addListener(
+      'keyboardDidShown',
       () => {
         setIsKeyboardShown(true);
       }
     );
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
+    const keyboardDidHiddenListener = Keyboard.addListener(
+      'keyboardDidHidden',
       () => {
         setIsKeyboardShown(false);
       }
     );
 
     return () => {
-      keyboardDidHideListener.remove();
-      keyboardDidShowListener.remove();
+      keyboardDidShownListener.remove();
+      keyboardDidHiddenListener.remove();
     };
   }, []);
 
-  useEffect(() => {
-    async function loadApplication() {
-      try {
-        await Font.loadAsync({
-          'Roboto-Medium': require('../assets/fonts/Roboto-Medium.ttf'),
-          'Roboto-Regular': require('../assets/fonts/Roboto-Regular.ttf'),
-        });
-      } catch (e) {
-        console.warn(e);
-      } finally {
-        setIsReady(true);
-      }
-    }
-
-    loadApplication();
-  }, []);
-
-  const onLayoutRootView = useCallback(async () => {
-    if (isReady) {
-      await SplashScreen.hideAsync();
-    }
-  }, [isReady]);
-
-  if (!isReady) {
-    return null;
-  }
-
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
-      <View style={{ ...styles.container }} onLayout={onLayoutRootView}>
+      <View style={{ ...styles.container }}>
         <Image
           style={styles.background}
-          source={require('../assets/images/background/photo_BG_3x.jpg')}
+          source={require('../../assets/images/background/photo_BG_3x.jpg')}
         />
         <View
           style={{
@@ -135,14 +99,21 @@ export default function RegistrationScreen() {
           }}
         >
           <KeyboardAvoidingView
-            style={styles.regulatedContainer}
+            style={styles.keyboardWrappper}
             behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
           >
             <View style={styles.avatar}>
+              <View style={styles.userPhotoWrapper}>
+                <Image
+                  style={styles.userPhoto}
+                  source={require('../../assets/images/user_photos/profile_user_3x.jpg')}
+                />
+              </View>
+
               <TouchableOpacity style={styles.iconWrapper} activeOpacity={0.8}>
                 <Image
                   style={styles.addIcon}
-                  source={require('../assets/images/profile_add/add_3x.png')}
+                  source={require('../../assets/images/profile_add/add_3x.png')}
                 />
               </TouchableOpacity>
             </View>
@@ -181,7 +152,7 @@ export default function RegistrationScreen() {
                   activeOpacity={0.8}
                   onPress={passwordShown}
                 >
-                  <Text>{showPasswordBtn}</Text>
+                  <Text>{showPasswordButton}</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -198,6 +169,7 @@ export default function RegistrationScreen() {
             <TouchableOpacity
               style={styles.signUpForNotExistedAccount}
               activeOpacity={0.8}
+              onPress={() => navigation.navigate('Registration')}
             >
               <Text style={styles.signUpForNotExistedAccountTitle}>
                 Still have no account? Sign Up
@@ -232,17 +204,24 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
   },
-  regulatedContainer: {
+  keyboardWrappper: {
     alignItems: 'center',
   },
   avatar: {
     position: 'relative',
     top: -60,
+    zIndex: 1,
+  },
+  userPhotoWrapper: {
     width: 120,
     height: 120,
-    zIndex: 1,
     borderRadius: 16,
+    overflow: 'hidden',
     backgroundColor: '#F6F6F6',
+  },
+  userPhoto: {
+    width: '100%',
+    height: '100%',
   },
   iconWrapper: {
     position: 'absolute',
