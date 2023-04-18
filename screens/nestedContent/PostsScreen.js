@@ -22,42 +22,42 @@ export default function PostsScreen({ route, navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.overallWrapper}>
-        {/* <FlatList
+        <FlatList
           data={posts}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => ( */}
-        <View style={styles.publicationsWrapper}>
-          <Image
-            style={{ width: '100%', height: 240 }}
-            source={require('../../assets/images/posts_photos/forest_3x.jpg')}
-          />
+          renderItem={({ item }) => (
+            <View style={styles.publicationsWrapper}>
+              <Image
+                style={{ width: '100%', height: 240 }}
+                source={require('../../assets/images/posts_photos/forest_3x.jpg')}
+              />
 
-          <Text style={styles.publicationTitle}>Forest</Text>
+              <Text style={styles.publicationTitle}>Forest</Text>
 
-          <View style={styles.additionalInfoWrapper}>
-            <TouchableOpacity
-              style={{ flexDirection: 'row' }}
-              onPress={() => navigation.navigate('Comments')}
-            >
-              <FontAwesome5 name="comments" size={24} color="#BDBDBD" />
+              <View style={styles.additionalInfoWrapper}>
+                <TouchableOpacity
+                  style={{ flexDirection: 'row' }}
+                  onPress={() => navigation.navigate('Comments')}
+                >
+                  <FontAwesome5 name="comments" size={24} color="#BDBDBD" />
 
-              <Text style={styles.publicationComments}>0</Text>
-            </TouchableOpacity>
+                  <Text style={styles.publicationComments}>0</Text>
+                </TouchableOpacity>
 
-            <TouchableOpacity
-              style={{ flexDirection: 'row' }}
-              onPress={() => navigation.navigate('Map')}
-            >
-              <EvilIcons name="location" size={24} color="#BDBDBD" />
+                <TouchableOpacity
+                  style={{ flexDirection: 'row' }}
+                  onPress={() => navigation.navigate('Map')}
+                >
+                  <EvilIcons name="location" size={24} color="#BDBDBD" />
 
-              <Text style={styles.publicationLocation}>
-                Ivano-Frankivs'k Region, Ukraine
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        {/* )}
-        /> */}
+                  <Text style={styles.publicationLocation}>
+                    Ivano-Frankivs'k Region, Ukraine
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+        />
       </View>
     </View>
   );

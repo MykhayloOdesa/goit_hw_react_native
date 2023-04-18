@@ -90,14 +90,14 @@ export default function CreatePostsScreen({ navigation }) {
             style={styles.input}
             placeholder="Title..."
             placeholderTextColor={'#BDBDBD'}
-            // value={photo.title}
+            value={photo.title}
             onFocus={() => setIsKeyboardShown(true)}
-            // onChangeText={value => {
-            //   setPhoto(prevState => ({
-            //     ...prevState,
-            //     title: value,
-            //   }));
-            // }}
+            onChangeText={value => {
+              setPhoto(prevState => ({
+                ...prevState,
+                title: value,
+              }));
+            }}
           />
         </View>
 
@@ -110,14 +110,14 @@ export default function CreatePostsScreen({ navigation }) {
             style={[styles.input, { paddingLeft: 24 }]}
             placeholder="Location..."
             placeholderTextColor={'#BDBDBD'}
-            // value={photo.location}
+            value={photo.location}
             onFocus={() => setIsKeyboardShown(true)}
-            // onChangeText={value => {
-            //   setPhoto(prevState => ({
-            //     ...prevState,
-            //     location: value,
-            //   }));
-            // }}
+            onChangeText={value => {
+              setPhoto(prevState => ({
+                ...prevState,
+                location: value,
+              }));
+            }}
           />
         </View>
 
