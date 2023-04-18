@@ -117,6 +117,7 @@ export default function LoginScreen({ navigation }) {
                 />
               </TouchableOpacity>
             </View>
+
             <View style={{ ...styles.registration, width: dimensions }}>
               <Text style={styles.registrationTitle}>Log In</Text>
 
@@ -152,7 +153,9 @@ export default function LoginScreen({ navigation }) {
                   activeOpacity={0.8}
                   onPress={passwordShown}
                 >
-                  <Text>{showPasswordButton}</Text>
+                  <Text style={styles.revealButtonTitle}>
+                    {showPasswordButton}
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>

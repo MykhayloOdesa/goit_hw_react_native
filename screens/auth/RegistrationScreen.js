@@ -25,6 +25,7 @@ export default function RegistrationScreen({ navigation }) {
   const [state, setState] = useState(initialState);
   const [, setIsKeyboardShown] = useState(false);
   const [isPasswordSecured, setIsPasswordSecured] = useState(true);
+
   const [dimensions, setDimensions] = useState(
     Dimensions.get('window').width - 16 * 2
   );
@@ -110,6 +111,7 @@ export default function RegistrationScreen({ navigation }) {
                 />
               </TouchableOpacity>
             </View>
+
             <View style={{ ...styles.registration, width: dimensions }}>
               <Text style={styles.registrationTitle}>Registration</Text>
 

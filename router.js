@@ -12,6 +12,7 @@ import RegistrationScreen from './screens/auth/RegistrationScreen';
 import Home from './screens/mainContent/Home';
 import CreatePostScreen from './screens/mainContent/CreatePostsScreen';
 import ProfileScreen from './/screens/mainContent/ProfileScreen';
+// import PostsScreen from './screens/nestedContent/PostsScreen';
 
 const AuthStack = createStackNavigator();
 const MainTab = createBottomTabNavigator();

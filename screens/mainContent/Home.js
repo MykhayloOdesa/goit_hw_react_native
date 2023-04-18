@@ -1,6 +1,14 @@
 import React from 'react';
 import { StyleSheet, View, Image, Text } from 'react-native';
 
+import { createStackNavigator } from '@react-navigation/stack';
+
+import PostsScreen from '../nestedContent/PostsScreen';
+import CommentsScreen from '../nestedContent/CommentsScreen';
+import MapScreen from '../nestedContent/MapScreen';
+
+const NestedScreen = createStackNavigator();
+
 export default function Home() {
   return (
     <View style={styles.container}>
@@ -15,6 +23,12 @@ export default function Home() {
             <Text style={styles.userMail}>e-mail@example.com</Text>
           </View>
         </View>
+
+        <NestedScreen.Navigator screenOptions={{ headerShown: false }}>
+          <NestedScreen.Screen name="Posts" component={PostsScreen} />
+          <NestedScreen.Screen name="Comments" component={CommentsScreen} />
+          <NestedScreen.Screen name="Map" component={MapScreen} />
+        </NestedScreen.Navigator>
       </View>
     </View>
   );
@@ -31,11 +45,11 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     flexDirection: 'column',
     marginTop: 32,
-    marginLeft: 16,
-    marginRight: 16,
+    marginHorizontal: 16,
   },
   user: {
     flexDirection: 'row',
+    marginBottom: 32,
   },
   avatar: {
     width: 60,
