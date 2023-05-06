@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import {
   StyleSheet,
   TouchableWithoutFeedback,
@@ -13,6 +14,8 @@ import {
   Platform,
 } from 'react-native';
 
+import { authLogInUser } from '../../redux/auth/authOperations';
+
 const initialState = {
   email: '',
   password: '',
@@ -22,8 +25,10 @@ export default function LoginScreen({ navigation }) {
   console.log('login', Platform.OS);
 
   const [state, setState] = useState(initialState);
-  const [, setIsKeyboardShown] = useState(false);
+  const [_, setIsKeyboardShown] = useState(false);
   const [isPasswordSecured, setIsPasswordSecured] = useState(true);
+
+  const dispatch = useDispatch();
 
   const [dimensions, setDimensions] = useState(
     Dimensions.get('window').width - 16 * 2
@@ -36,9 +41,12 @@ export default function LoginScreen({ navigation }) {
 
   const formSubmit = () => {
     setIsPasswordSecured(true);
-    console.log(state);
+
+    dispatch(authLogInUser(state));
+
     setState(initialState);
     keyboardHide();
+
     navigation.navigate('Home');
   };
 
@@ -54,7 +62,6 @@ export default function LoginScreen({ navigation }) {
   useEffect(() => {
     const onChange = () => {
       const width = Dimensions.get('window').width - 16 * 2;
-
       setDimensions(width);
     };
 
@@ -72,6 +79,7 @@ export default function LoginScreen({ navigation }) {
         setIsKeyboardShown(true);
       }
     );
+
     const keyboardDidHiddenListener = Keyboard.addListener(
       'keyboardDidHidden',
       () => {
@@ -92,6 +100,7 @@ export default function LoginScreen({ navigation }) {
           style={styles.background}
           source={require('../../assets/images/background/photo_BG_3x.jpg')}
         />
+
         <View
           style={{
             ...styles.overallWrapper,
@@ -160,6 +169,7 @@ export default function LoginScreen({ navigation }) {
               </View>
             </View>
           </KeyboardAvoidingView>
+
           <View style={{ ...styles.signUpButtonsWrapper, width: dimensions }}>
             <TouchableOpacity
               style={styles.loginButton}

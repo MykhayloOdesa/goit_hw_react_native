@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import {
   StyleSheet,
   TouchableWithoutFeedback,
@@ -13,6 +14,8 @@ import {
   Platform,
 } from 'react-native';
 
+import { authSignUpUser } from '../../redux/auth/authOperations';
+
 const initialState = {
   login: '',
   email: '',
@@ -23,8 +26,10 @@ export default function RegistrationScreen({ navigation }) {
   console.log('register', Platform.OS);
 
   const [state, setState] = useState(initialState);
-  const [, setIsKeyboardShown] = useState(false);
+  const [_, setIsKeyboardShown] = useState(false);
   const [isPasswordSecured, setIsPasswordSecured] = useState(true);
+
+  const dispatch = useDispatch();
 
   const [dimensions, setDimensions] = useState(
     Dimensions.get('window').width - 16 * 2
@@ -37,9 +42,12 @@ export default function RegistrationScreen({ navigation }) {
 
   const formSubmit = () => {
     setIsPasswordSecured(true);
-    console.log(state);
-    setState(initialState);
+
     keyboardHide();
+
+    dispatch(authSignUpUser(state));
+    setState(initialState);
+
     navigation.navigate('Home');
   };
 
@@ -55,7 +63,6 @@ export default function RegistrationScreen({ navigation }) {
   useEffect(() => {
     const onChange = () => {
       const width = Dimensions.get('window').width - 16 * 2;
-
       setDimensions(width);
     };
 
@@ -73,6 +80,7 @@ export default function RegistrationScreen({ navigation }) {
         setIsKeyboardShown(true);
       }
     );
+
     const keyboardDidHiddenListener = Keyboard.addListener(
       'keyboardDidHidden',
       () => {
@@ -93,6 +101,7 @@ export default function RegistrationScreen({ navigation }) {
           style={styles.background}
           source={require('../../assets/images/background/photo_BG_3x.jpg')}
         />
+
         <View
           style={{
             ...styles.overallWrapper,
@@ -166,6 +175,7 @@ export default function RegistrationScreen({ navigation }) {
               </View>
             </View>
           </KeyboardAvoidingView>
+
           <View style={{ ...styles.signUpButtonsWrapper, width: dimensions }}>
             <TouchableOpacity
               style={styles.signUpButton}
