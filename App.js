@@ -1,16 +1,15 @@
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
+import { Text, TouchableWithoutFeedback } from 'react-native';
+import { useFonts } from 'expo-font';
+
+import * as SplashScreen from 'expo-splash-screen';
 
 import { store, persistor } from './redux/store';
 
 import Main from './components/Main';
-import { Text, TouchableWithoutFeedback } from 'react-native';
-import { useCallback } from 'react';
-import { useFonts } from 'expo-font';
-
-import * as SplashScreen from 'expo-splash-screen';
 
 SplashScreen.preventAutoHideAsync();
 
