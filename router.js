@@ -1,10 +1,13 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { TouchableOpacity } from 'react-native';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { AntDesign, Ionicons, Feather } from '@expo/vector-icons';
+
+import { authOnStateChanged } from './redux/auth/authOperations';
 
 import LoginScreen from './screens/auth/LoginScreen';
 import RegistrationScreen from './screens/auth/RegistrationScreen';
@@ -17,6 +20,8 @@ const AuthStack = createStackNavigator();
 const MainTab = createBottomTabNavigator();
 
 export default function UseRoute(isAuth) {
+  const dispatch = useDispatch();
+
   if (!isAuth) {
     return (
       <AuthStack.Navigator initialRouteName="Login">
@@ -76,7 +81,7 @@ export default function UseRoute(isAuth) {
             <TouchableOpacity
               activeOpacity={0.8}
               style={{ marginRight: 10 }}
-              onPress={() => navigation.navigate('Login')}
+              onPress={() => dispatch(authOnStateChanged())}
             >
               <Feather name="log-out" size={24} color={'#BDBDBD'} />
             </TouchableOpacity>

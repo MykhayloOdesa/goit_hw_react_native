@@ -3,12 +3,14 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
-
 import { store, persistor } from './redux/store';
 
 import Main from './components/Main';
+import { Text, TouchableWithoutFeedback } from 'react-native';
+import { useCallback } from 'react';
+import { useFonts } from 'expo-font';
+
+import * as SplashScreen from 'expo-splash-screen';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -30,10 +32,12 @@ export default function App() {
   }
 
   return (
-    <Provider store={store}>
-      <PersistGate persistor={persistor} loading={<p>Loading...</p>}>
-        <Main onReady={onLayoutRootView} />
-      </PersistGate>
-    </Provider>
+    <TouchableWithoutFeedback onLayout={onLayoutRootView}>
+      <Provider store={store}>
+        <PersistGate persistor={persistor} loading={<Text>Loading...</Text>}>
+          <Main />
+        </PersistGate>
+      </Provider>
+    </TouchableWithoutFeedback>
   );
 }

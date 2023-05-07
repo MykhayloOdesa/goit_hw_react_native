@@ -4,6 +4,7 @@ import {
   signInWithEmailAndPassword,
   updateProfile,
   onAuthStateChanged,
+  signOut,
 } from 'firebase/auth';
 
 import { auth } from '../../firebase/config';
@@ -50,13 +51,32 @@ export const authLogInUser = createAsyncThunk(
   }
 );
 
-export const authSignOutUser = createAsyncThunk();
+export const authSignOutUser = createAsyncThunk(
+  'auth/signOut',
+  async (_, thunkAPI) => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+);
 
 export const authOnStateChanged = createAsyncThunk(
   'auth/update',
-  async (setUser, thunkAPI) => {
+  async (_, thunkAPI) => {
     try {
-      onAuthStateChanged(user => setUser(user));
+      onAuthStateChanged(async user => {
+        if (user) {
+          const updateSuccessful = auth.currentUser;
+
+          await updateProfile(updateSuccessful, {
+            login: updateSuccessful.displayName,
+            userID: updateSuccessful.uid,
+            isAuth: true,
+          });
+        }
+      });
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }
