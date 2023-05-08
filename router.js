@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { TouchableOpacity } from 'react-native';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -19,8 +19,10 @@ import ProfileScreen from './/screens/mainContent/ProfileScreen';
 const AuthStack = createStackNavigator();
 const MainTab = createBottomTabNavigator();
 
-export default function UseRoute(isAuth) {
+export default function RouterNavigator() {
   const dispatch = useDispatch();
+
+  const { isAuth } = useSelector(state => state.auth);
 
   if (!isAuth) {
     return (
