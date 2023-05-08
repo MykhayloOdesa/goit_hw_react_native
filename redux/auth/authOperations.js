@@ -66,7 +66,7 @@ export const authOnStateChanged = createAsyncThunk(
   'auth/update',
   async (_, thunkAPI) => {
     try {
-      onAuthStateChanged(async user => {
+      onAuthStateChanged(auth, async user => {
         if (user) {
           const updateSuccessful = auth.currentUser;
 

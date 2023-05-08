@@ -1,19 +1,31 @@
 import 'react-native-gesture-handler';
 import React, { useCallback } from 'react';
-import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react';
-import { Text, TouchableWithoutFeedback } from 'react-native';
+import { Provider, useSelector, useDispatch } from 'react-redux';
+// import { PersistGate } from 'redux-persist/integration/react';
+// import { Text } from 'react-native';
 import { useFonts } from 'expo-font';
+
+import { NavigationContainer } from '@react-navigation/native';
 
 import * as SplashScreen from 'expo-splash-screen';
 
 import { store, persistor } from './redux/store';
 
-import Main from './components/Main';
+import { authOnStateChanged } from './redux/auth/authOperations';
+import UseRoute from './router';
+
+// import Main from './components/Main';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
+  const { isAuth } = useSelector(state => state.auth);
+  console.log(state);
+
+  const dispatch = useDispatch();
+
+  const routing = UseRoute(isAuth);
+
   const [fontsLoaded] = useFonts({
     'Roboto-Bold': require('./assets/fonts/Roboto-Bold.ttf'),
     'Roboto-Medium': require('./assets/fonts/Roboto-Medium.ttf'),
@@ -30,13 +42,17 @@ export default function App() {
     return null;
   }
 
+  useEffect(() => {
+    dispatch(authOnStateChanged());
+  }, []);
+
   return (
-    <TouchableWithoutFeedback onLayout={onLayoutRootView}>
-      <Provider store={store}>
-        <PersistGate persistor={persistor} loading={<Text>Loading...</Text>}>
-          <Main />
-        </PersistGate>
-      </Provider>
-    </TouchableWithoutFeedback>
+    <Provider store={store}>
+      {/* <PersistGate persistor={persistor} loading={<Text>Loading...</Text>}> */}
+      <NavigationContainer onReady={onLayoutRootView}>
+        {routing}
+      </NavigationContainer>
+      {/* </PersistGate> */}
+    </Provider>
   );
 }

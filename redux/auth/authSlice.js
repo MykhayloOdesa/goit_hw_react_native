@@ -6,14 +6,16 @@ import {
   authOnStateChanged,
 } from './authOperations';
 
+const state = {
+  userID: null,
+  login: null,
+  isAuth: false,
+  error: false,
+};
+
 export const authSlice = createSlice({
   name: 'auth',
-  initialState: {
-    userID: null,
-    login: null,
-    isAuth: false,
-    error: false,
-  },
+  initialState: state,
   reducers: {},
   extraReducers: builder => {
     builder

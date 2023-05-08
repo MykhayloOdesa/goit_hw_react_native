@@ -1,19 +1,23 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { NavigationContainer } from '@react-navigation/native';
+// import React, { useEffect } from 'react';
+// import { useSelector, useDispatch } from 'react-redux';
+// import { NavigationContainer } from '@react-navigation/native';
 
-import { authOnStateChanged } from '../redux/auth/authOperations';
-import UseRoute from '../router';
+// import { authOnStateChanged } from '../redux/auth/authOperations';
+// import UseRoute from '../router';
 
-export default function Main() {
-  const { isAuth } = useSelector(state => state.auth);
-  const dispatch = useDispatch();
+// export default function Main(onLayoutRootView) {
+//   const { isAuth } = useSelector(state => state.auth);
+//   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(authOnStateChanged());
-  }, []);
+//   useEffect(() => {
+//     dispatch(authOnStateChanged());
+//   }, []);
 
-  const routing = UseRoute(isAuth);
+//   const routing = UseRoute(isAuth);
 
-  return <NavigationContainer>{routing}</NavigationContainer>;
-}
+//   return (
+//     <NavigationContainer onReady={onLayoutRootView}>
+//       {routing}
+//     </NavigationContainer>
+//   );
+// }
