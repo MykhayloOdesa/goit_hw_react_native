@@ -13,8 +13,6 @@ import { store, persistor } from './redux/store';
 
 import RouterNavigator from './router';
 
-// import Main from './components/Main';
-
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
