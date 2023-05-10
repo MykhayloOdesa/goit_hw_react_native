@@ -16,6 +16,7 @@ import { authSlice, authReducer } from './auth/authSlice';
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
+  timeout: null,
 };
 
 const rootReducer = combineReducers({
