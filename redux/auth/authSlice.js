@@ -28,8 +28,8 @@ export const authSlice = createSlice({
       .addCase(authSignUpUser.fulfilled, (state, action) => {
         return {
           ...state,
-          userID: action.payload.userID,
-          login: action.payload.login,
+          userID: action.payload,
+          login: action.payload,
           isAuth: true,
         };
       })
@@ -48,8 +48,8 @@ export const authSlice = createSlice({
       .addCase(authLogInUser.fulfilled, (state, action) => {
         return {
           ...state,
-          userID: action.payload.userID,
-          login: action.payload.login,
+          userID: action.payload,
+          login: action.payload,
           isAuth: true,
         };
       })
