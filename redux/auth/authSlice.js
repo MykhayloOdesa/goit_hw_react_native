@@ -28,8 +28,8 @@ export const authSlice = createSlice({
       .addCase(authSignUpUser.fulfilled, (state, action) => {
         return {
           ...state,
-          userID: action.payload,
-          login: action.payload,
+          userID: action.payload.uid,
+          login: action.payload.displayName,
           isAuth: true,
         };
       })
@@ -48,8 +48,8 @@ export const authSlice = createSlice({
       .addCase(authLogInUser.fulfilled, (state, action) => {
         return {
           ...state,
-          userID: action.payload,
-          login: action.payload,
+          userID: action.payload.uid,
+          login: action.payload.displayName,
           isAuth: true,
         };
       })
@@ -66,7 +66,7 @@ export const authSlice = createSlice({
         state.error = false;
       })
       .addCase(authSignOutUser.fulfilled, () => {
-        return initialState;
+        return state;
       })
       .addCase(authSignOutUser.rejected, state => {
         state.userID = null;

@@ -13,6 +13,9 @@ import {
 import { Camera, CameraType } from 'expo-camera';
 import * as Location from 'expo-location';
 
+import { collection, addDoc } from 'firebase/firestore';
+import { database } from '../../firebase/config';
+
 import { Fontisto, EvilIcons, AntDesign } from '@expo/vector-icons';
 
 export default function CreatePostsScreen({ navigation }) {
@@ -52,9 +55,24 @@ export default function CreatePostsScreen({ navigation }) {
     setPhoto(photo.uri);
   };
 
-  const sendPhoto = () => {
+  // Add a new document with a generated id.
+  const writeDataToFirestore = async () => {
+    try {
+      const docRef = await addDoc(collection(database, 'posts'), photo);
+
+      console.log('Document written with ID: ', docRef.id);
+    } catch (error) {
+      console.error('Error adding document: ', error);
+      throw error;
+    }
+  };
+
+  const sendPhoto = async () => {
+    await writeDataToFirestore();
+
     setIsKeyboardShown(false);
     Keyboard.dismiss();
+
     navigation.navigate('Posts', { photo });
   };
 

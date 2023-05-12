@@ -77,7 +77,7 @@ export default function RouterNavigator() {
       }}
     >
       <MainTab.Screen
-        options={({ navigation }) => ({
+        options={{
           headerTitle: 'Publications',
           headerRight: ({ focused, size, color }) => (
             <TouchableOpacity
@@ -91,7 +91,7 @@ export default function RouterNavigator() {
           tabBarIcon: ({ focused, size, color }) => (
             <AntDesign name="appstore-o" size={24} color={color} />
           ),
-        })}
+        }}
         name="Home"
         component={Home}
       />
