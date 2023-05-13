@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Keyboard,
@@ -9,37 +9,82 @@ import {
   TouchableOpacity,
   Button,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+
+import { useSelector } from 'react-redux';
 
 import { Camera, CameraType } from 'expo-camera';
 import * as Location from 'expo-location';
 
+import { Fontisto, EvilIcons, AntDesign } from '@expo/vector-icons';
+
 import { collection, addDoc } from 'firebase/firestore';
 import { database } from '../../firebase/config';
 
-import { Fontisto, EvilIcons, AntDesign } from '@expo/vector-icons';
-
-export default function CreatePostsScreen({ navigation }) {
+export default function CreatePostsScreen() {
   const [camera, setCamera] = useState(null);
   const [photo, setPhoto] = useState(null);
-  const [, setIsKeyboardShown] = useState(false);
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+
+  const [postTitle, setPostTitle] = useState('');
+
+  const [_, setIsKeyboardShown] = useState(false);
 
   const [type, setType] = useState(CameraType.back);
-  const [permission, requestPermission] = Camera.useCameraPermissions();
+  // const [permission, requestPermission] = Camera.useCameraPermissions();
 
-  if (!permission) {
-    return <View />;
+  const { userID, login } = useSelector(state => state.auth);
+
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync();
+
+      console.log('latitude', location.coords.latitude);
+      console.log('longitude', location.coords.longitude);
+
+      setLocation(location);
+    })();
+
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access camera was denied');
+        return;
+      }
+    })();
+  }, []);
+
+  let text = 'Waiting..';
+  if (errorMsg) {
+    text = errorMsg;
+  } else if (location) {
+    text = JSON.stringify(location);
   }
 
-  if (!permission.granted) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center' }}>
-        <Text style={{ textAlign: 'center' }}>
-          We need your permission to show the camera
-        </Text>
-        <Button onPress={requestPermission} title="grant permission" />
-      </View>
-    );
-  }
+  // if (!permission) {
+  //   return <View />;
+  // }
+
+  // if (!permission.granted) {
+  //   return (
+  //     <View style={{ flex: 1, justifyContent: 'center' }}>
+  //       <Text style={{ textAlign: 'center' }}>
+  //         We need your permission to show the camera
+  //       </Text>
+  //       <Button onPress={requestPermission} title="grant permission" />
+  //     </View>
+  //   );
+  // }
 
   const toggleCameraType = () => {
     setType(current =>
@@ -49,18 +94,27 @@ export default function CreatePostsScreen({ navigation }) {
 
   const takePhoto = async () => {
     const photo = await camera.takePictureAsync();
-    const location = await Location.getCurrentPositionAsync();
-    console.log('latitude', location.coords.latitude);
-    console.log('longitude', location.coords.longitude);
+
     setPhoto(photo.uri);
+    console.log('photo.uri ', photo.uri);
   };
 
-  // Add a new document with a generated id.
   const writeDataToFirestore = async () => {
     try {
-      const docRef = await addDoc(collection(database, 'posts'), photo);
+      const response = await fetch(photo);
+      const file = await response.blob();
+
+      const docRef = await addDoc(collection(database, 'posts'), {
+        userID,
+        login,
+        file,
+        location: location.coords,
+        postTitle,
+      });
 
       console.log('Document written with ID: ', docRef.id);
+
+      return docRef;
     } catch (error) {
       console.error('Error adding document: ', error);
       throw error;
@@ -73,7 +127,7 @@ export default function CreatePostsScreen({ navigation }) {
     setIsKeyboardShown(false);
     Keyboard.dismiss();
 
-    navigation.navigate('Posts', { photo });
+    navigation.navigate('Posts');
   };
 
   return (
@@ -108,14 +162,9 @@ export default function CreatePostsScreen({ navigation }) {
             style={styles.input}
             placeholder="Title..."
             placeholderTextColor={'#BDBDBD'}
-            value={photo.title}
+            value={postTitle}
             onFocus={() => setIsKeyboardShown(true)}
-            onChangeText={value => {
-              setPhoto(prevState => ({
-                ...prevState,
-                title: value,
-              }));
-            }}
+            onChangeText={setPostTitle(postTitle)}
           />
         </View>
 
@@ -128,14 +177,9 @@ export default function CreatePostsScreen({ navigation }) {
             style={[styles.input, { paddingLeft: 24 }]}
             placeholder="Location..."
             placeholderTextColor={'#BDBDBD'}
-            value={photo.location}
+            value={location}
             onFocus={() => setIsKeyboardShown(true)}
-            onChangeText={value => {
-              setPhoto(prevState => ({
-                ...prevState,
-                location: value,
-              }));
-            }}
+            onChangeText={setLocation(location)}
           />
         </View>
 

@@ -10,14 +10,33 @@ import {
 
 import { FontAwesome5, EvilIcons } from '@expo/vector-icons';
 
-export default function PostsScreen({ route, navigation }) {
+import { collection, getDocs } from 'firebase/firestore';
+import { database } from '../../firebase/config';
+
+export default function PostsScreen({ navigation }) {
   const [posts, setPosts] = useState([]);
 
-  useEffect(() => {
-    if (route.params) {
-      setPosts(prevState => [...prevState, route.params]);
+  const getDataFromFirestore = async () => {
+    try {
+      const snapshot = await getDocs(collection(database, 'posts'));
+
+      snapshot.forEach(post => console.log(`${post.id} =>`, post.data()));
+
+      const snapshotsArray = await snapshot.map(post => ({
+        id: post.id,
+        data: post.data(),
+      }));
+
+      setPosts(snapshotsArray);
+    } catch (error) {
+      console.log(error);
+      throw error;
     }
-  }, [route.params]);
+  };
+
+  useEffect(() => {
+    getDataFromFirestore();
+  }, []);
 
   return (
     <View style={styles.container}>

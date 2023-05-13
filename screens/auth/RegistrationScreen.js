@@ -13,6 +13,7 @@ import {
   Dimensions,
   Platform,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 import { authSignUpUser } from '../../redux/auth/authOperations';
 
@@ -22,12 +23,14 @@ const initialState = {
   password: '',
 };
 
-export default function RegistrationScreen({ navigation }) {
+export default function RegistrationScreen() {
   console.log('register', Platform.OS);
 
   const [state, setState] = useState(initialState);
   const [_, setIsKeyboardShown] = useState(false);
   const [isPasswordSecured, setIsPasswordSecured] = useState(true);
+
+  const navigation = useNavigation();
 
   const dispatch = useDispatch();
 

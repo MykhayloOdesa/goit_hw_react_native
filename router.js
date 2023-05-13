@@ -44,7 +44,22 @@ export default function RouterNavigator() {
 
   return (
     <MainTab.Navigator
-      screenOptions={{
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+
+          if (route.name === 'Home') {
+            iconName = 'appstore-o';
+            return <AntDesign name={iconName} size={24} color={color} />;
+          } else if (route.name === 'Create') {
+            iconName = 'add';
+            return <Ionicons name={iconName} size={24} color={color} />;
+          } else if (route.name === 'Profile') {
+            iconName = 'md-person-outline';
+            return <Ionicons name={iconName} size={24} color={color} />;
+          }
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
         headerTitleStyle: {
           fontFamily: 'Roboto-Medium',
           fontSize: 17,
@@ -74,7 +89,7 @@ export default function RouterNavigator() {
         tabBarInactiveTintColor: 'rgba(33, 33, 33, 0.8)',
         tabBarActiveTintColor: '#FFFFFF',
         tabBarActiveBackgroundColor: '#FF6C00',
-      }}
+      })}
     >
       <MainTab.Screen
         options={{
@@ -87,9 +102,6 @@ export default function RouterNavigator() {
             >
               <Feather name="log-out" size={24} color={'#BDBDBD'} />
             </TouchableOpacity>
-          ),
-          tabBarIcon: ({ focused, size, color }) => (
-            <AntDesign name="appstore-o" size={24} color={color} />
           ),
         }}
         name="Home"
@@ -108,23 +120,12 @@ export default function RouterNavigator() {
               />
             </TouchableOpacity>
           ),
-          tabBarIcon: ({ focused, size, color }) => (
-            <Ionicons name="add" size={24} color={color} />
-          ),
         }}
         name="Create"
         component={CreatePostScreen}
       />
 
-      <MainTab.Screen
-        options={{
-          tabBarIcon: ({ focused, size, color }) => (
-            <Ionicons name="md-person-outline" size={24} color={color} />
-          ),
-        }}
-        name="Profile"
-        component={ProfileScreen}
-      />
+      <MainTab.Screen name="Profile" component={ProfileScreen} />
     </MainTab.Navigator>
   );
 }
