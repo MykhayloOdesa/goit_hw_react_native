@@ -55,7 +55,9 @@ export default function PostsScreen({ navigation }) {
               <View style={styles.additionalInfoWrapper}>
                 <TouchableOpacity
                   style={{ flexDirection: 'row' }}
-                  onPress={() => navigation.navigate('Comments')}
+                  onPress={() =>
+                    navigation.navigate('Comments', { postID: item.id })
+                  }
                 >
                   <FontAwesome5 name="comments" size={24} color="#BDBDBD" />
 

@@ -33,7 +33,7 @@ export default function CreatePostsScreen() {
   const [_, setIsKeyboardShown] = useState(false);
 
   const [type, setType] = useState(CameraType.back);
-  // const [permission, requestPermission] = Camera.useCameraPermissions();
+  const [permission, requestPermission] = Camera.useCameraPermissions();
 
   const { userID, login } = useSelector(state => state.auth);
 
@@ -72,20 +72,20 @@ export default function CreatePostsScreen() {
     text = JSON.stringify(location);
   }
 
-  // if (!permission) {
-  //   return <View />;
-  // }
+  if (!permission) {
+    return <View />;
+  }
 
-  // if (!permission.granted) {
-  //   return (
-  //     <View style={{ flex: 1, justifyContent: 'center' }}>
-  //       <Text style={{ textAlign: 'center' }}>
-  //         We need your permission to show the camera
-  //       </Text>
-  //       <Button onPress={requestPermission} title="grant permission" />
-  //     </View>
-  //   );
-  // }
+  if (!permission.granted) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center' }}>
+        <Text style={{ textAlign: 'center' }}>
+          We need your permission to show the camera
+        </Text>
+        <Button onPress={requestPermission} title="grant permission" />
+      </View>
+    );
+  }
 
   const toggleCameraType = () => {
     setType(current =>
@@ -100,27 +100,27 @@ export default function CreatePostsScreen() {
     console.log('photo.uri ', photo.uri);
   };
 
-  const uploadPhotoToServer = async photo => {
-    const response = await fetch(photo);
-    const file = await response.blob();
+  // const uploadPhotoToServer = async photo => {
+  //   const response = await fetch(photo);
+  //   const file = await response.blob();
 
-    const uniquePostID = Date.now().toString();
+  //   const uniquePostID = Date.now().toString();
 
-    const storageRef = ref(storage, `postImage/${uniquePostID}`);
+  //   const storageRef = ref(storage, `postImage/${uniquePostID}`);
 
-    const metadata = {
-      contentType: 'image/jpeg',
-    };
+  //   const metadata = {
+  //     contentType: 'image/jpeg',
+  //   };
 
-    // Upload the file and metadata
-    const uploadedPhoto = await uploadBytes(storageRef, file, metadata);
+  //   // Upload the file and metadata
+  //   const uploadedPhoto = await uploadBytes(storageRef, file, metadata);
 
-    return uploadedPhoto;
-  };
+  //   return uploadedPhoto;
+  // };
 
   const writeDataToFirestore = async () => {
     try {
-      const photo = await uploadPhotoToServer();
+      // const photo = await uploadPhotoToServer();
 
       const docRef = await addDoc(collection(database, 'posts'), {
         userID,

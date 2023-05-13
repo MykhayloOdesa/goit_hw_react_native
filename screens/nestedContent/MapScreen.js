@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Dimensions } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
 export default function MapScreen({ route }) {
@@ -10,7 +10,10 @@ export default function MapScreen({ route }) {
   return (
     <View style={styles.container}>
       <MapView
-        style={{ flex: 1 }}
+        style={{
+          width: Dimensions.get('window').width,
+          height: Dimensions.get('window').height,
+        }}
         initialRegion={{
           latitude,
           longitude,
