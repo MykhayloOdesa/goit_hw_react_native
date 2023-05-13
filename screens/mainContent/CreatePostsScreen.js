@@ -18,7 +18,7 @@ import * as Location from 'expo-location';
 import { Fontisto, EvilIcons, AntDesign } from '@expo/vector-icons';
 
 import { collection, addDoc } from 'firebase/firestore';
-// import { ref, uploadBytes } from 'firebase/storage';
+import { ref, uploadBytes } from 'firebase/storage';
 
 import { database, storage } from '../../firebase/config';
 
@@ -100,36 +100,33 @@ export default function CreatePostsScreen() {
     console.log('photo.uri ', photo.uri);
   };
 
-  // const uploadPhotoIntoStorage = async photo => {
-  //   const response = await fetch(photo);
-  //   const file = await response.blob();
+  const uploadPhotoToServer = async photo => {
+    const response = await fetch(photo);
+    const file = await response.blob();
 
-  //   const uniquePhotoID = Date.now();
+    const uniquePostID = Date.now().toString();
 
-  //   const storageRef = ref(storage, `images/${uniquePhotoID}_photo.jpg`);
+    const storageRef = ref(storage, `postImage/${uniquePostID}`);
 
-  //   const metadata = {
-  //     contentType: 'image/jpeg',
-  //   };
+    const metadata = {
+      contentType: 'image/jpeg',
+    };
 
-  //   await uploadBytes(storageRef, file, metadata);
+    // Upload the file and metadata
+    const uploadedPhoto = await uploadBytes(storageRef, file, metadata);
 
-  //   const uploadedPhoto = await getDownloadURL(
-  //     ref(storage, `images/${uniquePhotoID}_photo.jpg`)
-  //   );
-
-  //   return uploadedPhoto;
-  // };
+    return uploadedPhoto;
+  };
 
   const writeDataToFirestore = async () => {
     try {
-      // await uploadPhotoIntoStorage();
+      const photo = await uploadPhotoToServer();
 
       const docRef = await addDoc(collection(database, 'posts'), {
         userID,
         login,
         photo,
-        location,
+        location: location.coords,
         postTitle,
       });
 
