@@ -7,7 +7,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Button,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
@@ -19,7 +18,9 @@ import * as Location from 'expo-location';
 import { Fontisto, EvilIcons, AntDesign } from '@expo/vector-icons';
 
 import { collection, addDoc } from 'firebase/firestore';
-import { database } from '../../firebase/config';
+// import { ref, uploadBytes } from 'firebase/storage';
+
+import { database, storage } from '../../firebase/config';
 
 export default function CreatePostsScreen() {
   const [camera, setCamera] = useState(null);
@@ -99,16 +100,36 @@ export default function CreatePostsScreen() {
     console.log('photo.uri ', photo.uri);
   };
 
+  // const uploadPhotoIntoStorage = async photo => {
+  //   const response = await fetch(photo);
+  //   const file = await response.blob();
+
+  //   const uniquePhotoID = Date.now();
+
+  //   const storageRef = ref(storage, `images/${uniquePhotoID}_photo.jpg`);
+
+  //   const metadata = {
+  //     contentType: 'image/jpeg',
+  //   };
+
+  //   await uploadBytes(storageRef, file, metadata);
+
+  //   const uploadedPhoto = await getDownloadURL(
+  //     ref(storage, `images/${uniquePhotoID}_photo.jpg`)
+  //   );
+
+  //   return uploadedPhoto;
+  // };
+
   const writeDataToFirestore = async () => {
     try {
-      const response = await fetch(photo);
-      const file = await response.blob();
+      // await uploadPhotoIntoStorage();
 
       const docRef = await addDoc(collection(database, 'posts'), {
         userID,
         login,
-        file,
-        location: location.coords,
+        photo,
+        location,
         postTitle,
       });
 
@@ -164,7 +185,7 @@ export default function CreatePostsScreen() {
             placeholderTextColor={'#BDBDBD'}
             value={postTitle}
             onFocus={() => setIsKeyboardShown(true)}
-            onChangeText={setPostTitle(postTitle)}
+            onChangeText={setPostTitle}
           />
         </View>
 
@@ -177,9 +198,9 @@ export default function CreatePostsScreen() {
             style={[styles.input, { paddingLeft: 24 }]}
             placeholder="Location..."
             placeholderTextColor={'#BDBDBD'}
-            value={location}
+            // value={location}
             onFocus={() => setIsKeyboardShown(true)}
-            onChangeText={setLocation(location)}
+            onChangeText={setLocation}
           />
         </View>
 

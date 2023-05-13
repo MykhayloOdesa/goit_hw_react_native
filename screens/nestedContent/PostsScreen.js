@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   StyleSheet,
   View,
@@ -7,6 +7,7 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { FontAwesome5, EvilIcons } from '@expo/vector-icons';
 
@@ -18,40 +19,38 @@ export default function PostsScreen({ navigation }) {
 
   const getDataFromFirestore = async () => {
     try {
-      const snapshot = await getDocs(collection(database, 'posts'));
+      const array = [];
 
-      snapshot.forEach(post => console.log(`${post.id} =>`, post.data()));
+      const snapshot = await getDocs(collection(database, '/posts'));
+      snapshot.forEach(post => array.push({ ...post.data(), id: post.id }));
 
-      const snapshotsArray = await snapshot.map(post => ({
-        id: post.id,
-        data: post.data(),
-      }));
-
-      setPosts(snapshotsArray);
+      setPosts(array);
     } catch (error) {
       console.log(error);
       throw error;
     }
   };
 
-  useEffect(() => {
-    getDataFromFirestore();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      getDataFromFirestore();
+    }, [])
+  );
 
   return (
     <View style={styles.container}>
       <View style={styles.overallWrapper}>
         <FlatList
           data={posts}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={item => item.id}
           renderItem={({ item }) => (
             <View style={styles.publicationsWrapper}>
               <Image
                 style={{ width: '100%', height: 240 }}
-                source={require('../../assets/images/posts_photos/forest_3x.jpg')}
+                source={{ uri: item.photo }}
               />
 
-              <Text style={styles.publicationTitle}>Forest</Text>
+              <Text style={styles.publicationTitle}>{item.postTitle}</Text>
 
               <View style={styles.additionalInfoWrapper}>
                 <TouchableOpacity
@@ -65,12 +64,14 @@ export default function PostsScreen({ navigation }) {
 
                 <TouchableOpacity
                   style={{ flexDirection: 'row' }}
-                  onPress={() => navigation.navigate('Map')}
+                  onPress={() =>
+                    navigation.navigate('Map', { location: item.location })
+                  }
                 >
                   <EvilIcons name="location" size={24} color="#BDBDBD" />
 
                   <Text style={styles.publicationLocation}>
-                    Ivano-Frankivs'k Region, Ukraine
+                    {item.location.coords}
                   </Text>
                 </TouchableOpacity>
               </View>
