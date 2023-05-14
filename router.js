@@ -7,7 +7,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import { AntDesign, Ionicons, Feather } from '@expo/vector-icons';
 
-import { authOnStateChanged } from './redux/auth/authOperations';
+import { authSignOutUser } from './redux/auth/authOperations';
 
 import LoginScreen from './screens/auth/LoginScreen';
 import RegistrationScreen from './screens/auth/RegistrationScreen';
@@ -98,7 +98,7 @@ export default function RouterNavigator() {
             <TouchableOpacity
               activeOpacity={0.8}
               style={{ marginRight: 10 }}
-              onPress={() => dispatch(authOnStateChanged())}
+              onPress={() => dispatch(authSignOutUser())}
             >
               <Feather name="log-out" size={24} color={'#BDBDBD'} />
             </TouchableOpacity>

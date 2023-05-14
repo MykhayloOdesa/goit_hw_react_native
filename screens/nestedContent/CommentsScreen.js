@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 import { addDoc, collection, doc, getDocs } from 'firebase/firestore';
 
 import { database } from '../../firebase/config';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function CommentsScreen({ route }) {
   const { postID } = route.params;
@@ -21,31 +22,22 @@ export default function CommentsScreen({ route }) {
 
   const { login } = useSelector(state => state.auth);
 
-  useEffect(() => {
-    getAllPosts(postID);
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      updateDataInFirestore();
+    }, [])
+  );
 
   const updateDataInFirestore = async () => {
     try {
+      const array = [];
+
       const ref = doc(database, 'posts', postID);
 
       await addDoc(collection(ref, 'comments'), {
         login,
         comment,
       });
-
-      console.log('comment added');
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
-  };
-
-  const getAllPosts = async () => {
-    try {
-      const array = [];
-
-      const ref = doc(database, 'posts', postID);
 
       const comments = await getDocs(collection(ref, '/comments'));
 
@@ -55,7 +47,9 @@ export default function CommentsScreen({ route }) {
 
       setAllComments(array);
 
-      console.log('document updated');
+      setComment('');
+
+      console.log('comment added');
     } catch (error) {
       console.log(error);
       throw error;
@@ -77,7 +71,11 @@ export default function CommentsScreen({ route }) {
         />
       </SafeAreaView>
       <View style={styles.inputContainer}>
-        <TextInput style={styles.input} onChangeText={setComment} />
+        <TextInput
+          style={styles.input}
+          value={comment}
+          onChangeText={setComment}
+        />
       </View>
       <TouchableOpacity onPress={updateDataInFirestore} style={styles.sendBtn}>
         <Text style={styles.sendLabel}>add post</Text>

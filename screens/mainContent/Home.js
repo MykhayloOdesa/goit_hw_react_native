@@ -6,10 +6,13 @@ import { createStackNavigator } from '@react-navigation/stack';
 import PostsScreen from '../nestedContent/PostsScreen';
 import CommentsScreen from '../nestedContent/CommentsScreen';
 import MapScreen from '../nestedContent/MapScreen';
+import { useSelector } from 'react-redux';
 
 const NestedScreen = createStackNavigator();
 
 export default function Home() {
+  const { login, isAuth } = useSelector(state => state.auth);
+
   return (
     <View style={styles.container}>
       <View style={styles.overallWrapper}>
@@ -19,8 +22,8 @@ export default function Home() {
             source={require('../../assets/images/user_photos/profile_user_3x.jpg')}
           />
           <View style={styles.userInfo}>
-            <Text style={styles.userName}>Natali Romanova</Text>
-            <Text style={styles.userMail}>e-mail@example.com</Text>
+            <Text style={styles.userName}>{login}</Text>
+            <Text style={styles.userMail}>{isAuth && 'online'}</Text>
           </View>
         </View>
 

@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   StyleSheet,
   View,
   TouchableOpacity,
   Text,
   Image,
-  // ScrollView,
   FlatList,
-  // Dimensions,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { Feather, EvilIcons, FontAwesome5, Entypo } from '@expo/vector-icons';
 
@@ -20,36 +19,22 @@ import { database } from '../../firebase/config';
 
 export default function ProfileScreen({ navigation }) {
   const [userPosts, setUserPosts] = useState([]);
-  // const [dimensions, setDimensions] = useState(
-  //   Dimensions.get('window').width - 16 * 2
-  // );
 
   const { login, userID } = useSelector(state => state.auth);
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    getUserPosts();
-  }, []);
-
-  // useEffect(() => {
-  //   const onChange = () => {
-  //     const width = Dimensions.get('window').width - 16 * 2;
-  //     setDimensions(width);
-  //   };
-
-  //   Dimensions.addEventListener('change', onChange);
-
-  //   return () => {
-  //     Dimensions.removeEventListener('change', onChange);
-  //   };
-  // }, []);
+  useFocusEffect(
+    useCallback(() => {
+      getUserPosts();
+    }, [])
+  );
 
   const getUserPosts = async () => {
     try {
       const array = [];
 
-      const ref = collection(database, 'posts');
+      const ref = collection(database, '/posts');
 
       // Create a query against the collection.
       const q = query(ref, where('userID', '==', userID));
@@ -68,10 +53,6 @@ export default function ProfileScreen({ navigation }) {
 
   return (
     <View style={{ ...styles.container }}>
-      {/* <ScrollView
-        contentContainerStyle={styles.keyboardWrappper}
-        behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
-      > */}
       <Image
         style={styles.background}
         source={require('../../assets/images/background/photo_BG_3x.jpg')}
@@ -80,7 +61,6 @@ export default function ProfileScreen({ navigation }) {
       <View
         style={{
           ...styles.overallWrapper,
-          // width: dimensions + 16 * 2,
         }}
       >
         <View style={styles.avatar}>
@@ -90,13 +70,6 @@ export default function ProfileScreen({ navigation }) {
               source={require('../../assets/images/user_photos/profile_user_3x.jpg')}
             />
           </View>
-
-          <TouchableOpacity style={styles.iconWrapper} activeOpacity={0.8}>
-            <Image
-              style={styles.addIcon}
-              source={require('../../assets/images/profile_add/add_3x.png')}
-            />
-          </TouchableOpacity>
         </View>
 
         <TouchableOpacity
@@ -159,7 +132,6 @@ export default function ProfileScreen({ navigation }) {
           )}
         />
       </View>
-      {/* </ScrollView> */}
     </View>
   );
 }
@@ -179,19 +151,17 @@ const styles = StyleSheet.create({
     left: 0,
     resizeMode: 'cover',
   },
-  keyboardWrappper: {
-    alignItems: 'center',
-  },
   overallWrapper: {
     width: '100%',
-    height: '67%',
+    height: '80%',
     backgroundColor: '#FFFFFF',
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
   },
   avatar: {
-    width: 120,
-    height: 120,
+    alignSelf: 'center',
+    top: -60,
+    zIndex: 1,
     borderRadius: 16,
     overflow: 'hidden',
   },
@@ -199,21 +169,11 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 16,
-    overflow: 'hidden',
     backgroundColor: '#F6F6F6',
   },
   userPhoto: {
     width: '100%',
     height: '100%',
-  },
-  iconWrapper: {
-    position: 'absolute',
-    right: -13,
-    bottom: 14,
-  },
-  addIcon: {
-    width: 25,
-    height: 25,
   },
   logOutBtn: {
     position: 'absolute',
