@@ -20,7 +20,7 @@ export default function CommentsScreen({ route }) {
   const [comment, setComment] = useState('');
   const [allComments, setAllComments] = useState([]);
 
-  const { login } = useSelector(state => state.auth);
+  const { login } = useSelector(state => state);
 
   useFocusEffect(
     useCallback(() => {

@@ -34,7 +34,7 @@ export default function CreatePostsScreen() {
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
 
-  const { userID, login } = useSelector(state => state.auth);
+  const { userID, login } = useSelector(state => state);
 
   const navigation = useNavigation();
 

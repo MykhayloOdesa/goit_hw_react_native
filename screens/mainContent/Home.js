@@ -11,7 +11,7 @@ import { useSelector } from 'react-redux';
 const NestedScreen = createStackNavigator();
 
 export default function Home() {
-  const { login, isAuth } = useSelector(state => state.auth);
+  const { login, isAuth } = useSelector(state => state);
 
   return (
     <View style={styles.container}>

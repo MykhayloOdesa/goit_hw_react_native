@@ -20,7 +20,7 @@ import { database } from '../../firebase/config';
 export default function ProfileScreen({ navigation }) {
   const [userPosts, setUserPosts] = useState([]);
 
-  const { login, userID } = useSelector(state => state.auth);
+  const { login, userID } = useSelector(state => state);
 
   const dispatch = useDispatch();
 

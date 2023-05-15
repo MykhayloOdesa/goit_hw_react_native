@@ -22,7 +22,7 @@ const MainTab = createBottomTabNavigator();
 export default function RouterNavigator() {
   const dispatch = useDispatch();
 
-  const { isAuth } = useSelector(state => state.auth);
+  const { isAuth } = useSelector(state => state);
 
   if (!isAuth) {
     return (
