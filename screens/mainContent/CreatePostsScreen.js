@@ -105,8 +105,6 @@ export default function CreatePostsScreen() {
     try {
       setIsLoading(true);
 
-      isLoading && <Text>Loading...</Text>;
-
       const docRef = await addDoc(collection(database, 'posts'), {
         userID,
         login,
@@ -205,6 +203,12 @@ export default function CreatePostsScreen() {
             Publish
           </Text>
         </TouchableOpacity>
+
+        {isLoading && (
+          <Text style={{ justifyContent: 'center', color: 'red' }}>
+            Loading...
+          </Text>
+        )}
 
         <TouchableOpacity
           style={styles.deleteIcon}
