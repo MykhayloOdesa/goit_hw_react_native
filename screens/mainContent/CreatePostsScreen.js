@@ -7,6 +7,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
@@ -22,6 +23,7 @@ import { collection, addDoc } from 'firebase/firestore';
 import { database } from '../../firebase/config';
 
 export default function CreatePostsScreen() {
+  const [isLoading, setIsLoading] = useState(false);
   const [camera, setCamera] = useState(null);
   const [photo, setPhoto] = useState(null);
   const [location, setLocation] = useState(null);
@@ -29,7 +31,7 @@ export default function CreatePostsScreen() {
 
   const [postTitle, setPostTitle] = useState('');
 
-  const [_, setIsKeyboardShown] = useState(false);
+  const [, setIsKeyboardShown] = useState(false);
 
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
@@ -101,6 +103,10 @@ export default function CreatePostsScreen() {
 
   const writeDataToFirestore = async () => {
     try {
+      setIsLoading(true);
+
+      isLoading && <Text>Loading...</Text>;
+
       const docRef = await addDoc(collection(database, 'posts'), {
         userID,
         login,
@@ -113,8 +119,10 @@ export default function CreatePostsScreen() {
 
       return docRef;
     } catch (error) {
-      console.error('Error adding document: ', error);
+      Alert('Error adding document: ', error);
       throw error;
+    } finally {
+      setIsLoading(false);
     }
   };
 
