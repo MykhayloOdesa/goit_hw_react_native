@@ -12,7 +12,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "jsEngine": "jsc",
       "supportsTablet": true
@@ -23,8 +25,13 @@
         "backgroundColor": "#ffffff"
       },
       "jsEngine": "jsc",
-      "permissions": ["CAMERA"],
-      "softwareKeyboardLayoutMode": "pan"
+      "permissions": [
+        "CAMERA",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "softwareKeyboardLayoutMode": "pan",
+      "package": "com.mikaaele.goit_hw_react_native"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -36,6 +43,11 @@
           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "b1a84b41-ec95-425e-a7cd-565857d74654"
+      }
+    }
   }
 }
